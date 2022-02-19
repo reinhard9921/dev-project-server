@@ -79,7 +79,7 @@ app.get('/api/createTableusers', (req,res) => {
 
 app.get('/api/createTableusers1', (req,res) => {
     const user = req.body;
-    client.query(`CREATE table userinfo(id int NOT NULL AUTO_INCREMENT, name varchar(50), height float, email varchar(100),  PRIMARY KEY (id))`, (err, result)=>{
+    client.query(`CREATE table userinfo(id SERIAL PRIMARY KEY, name varchar(50), height float, email varchar(100),  PRIMARY KEY (id))`, (err, result)=>{
         if(!err){
             res.send(result.rows);
            
