@@ -75,11 +75,8 @@ app.post('/api/insertuser', (req,res) => {
     client.end;
 
 })
-app.listen(3001, ()=> {
+app.listen(port, () => console.log(`url-shortener listening on port ${port}!`));
 
-console.log('Running on port 3001');
-
-});
 
 
 
