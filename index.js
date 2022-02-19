@@ -7,26 +7,11 @@ const port = process.env.PORT || 3000;
 var nodemailer = require('nodemailer');
 
 
-const Pool = require("pg").Pool;
-require(".env").config();
-const isProduction = process.env.NODE_ENV === "production";
-const connectionString = `postgresql://${process.env.PG_USER}:${process.env.PG_PASSWORD}@${process.env.PG_HOST}:${process.env.PG_PORT}/${process.env.PG_DATABASE}`;
-const pool = new Pool({
-    connectionString: isProduction ? process.env.DATABASE_URL : connectionString,
-    ssl: {
-        rejectUnauthorized: false,
-    },
-});
-
-
-
-
 const client = new Client({
-    host: "localhost",
-    user: "postgres",
-    port: 5432,
-    password: "Cvv32sc6",
-    database: "postgres"
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
 })
 
 app.use(function(req, res, next) {
@@ -41,7 +26,7 @@ app.use(function(req, res, next) {
 
 function getdata(email, height, name){
 
-    pool.query(`Select avg(height) from userinfo`, (err, result)=>{
+        client.query(`Select avg(height) from userinfo`, (err, result)=>{
             if(!err){
                 const avg = result.rows[0].avg;
                 var mailOptions = {
@@ -59,7 +44,7 @@ function getdata(email, height, name){
                   });
             }
         });
-        pool.end;
+        client.end;
   
 }
 var transporter = nodemailer.createTransport({
@@ -78,7 +63,7 @@ app.get('/', (req,res) => {
 app.post('/api/insertuser', (req,res) => {
     console.log("running insert");
     const user = req.body;
-    pool.query(`INSERT INTO userinfo(name, height, email) VALUES ('${user.name}', ${user.height},'${user.email}')`, (err, result)=>{
+    client.query(`INSERT INTO userinfo(name, height, email) VALUES ('${user.name}', ${user.height},'${user.email}')`, (err, result)=>{
         if(!err){
             res.send(result.rows);
             getdata(user.email, user.height, user.name);
@@ -89,7 +74,7 @@ app.post('/api/insertuser', (req,res) => {
             console.log(err.body);
         }
     });
-    pool.end;
+    client.end;
 
 })
 app.listen(port, () => console.log(`url-shortener listening on port ${port}!`));
@@ -97,5 +82,5 @@ app.listen(port, () => console.log(`url-shortener listening on port ${port}!`));
 
 
 
-pool.connect();
-module.exports = pool
+client.connect();
+module.exports = client
