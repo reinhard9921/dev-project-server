@@ -60,7 +60,7 @@ app.get('/', (req,res) => {
     res.send("Hello World");
 })
 
-app.post('/api/createTableusers', (req,res) => {
+app.get('/api/createTableusers', (req,res) => {
     const user = req.body;
     client.query(`CREATE table userinfo(id int PRIMARY KEY, name varchar(50), height float, email varchar(100))`, (err, result)=>{
         if(!err){
@@ -77,7 +77,7 @@ app.post('/api/createTableusers', (req,res) => {
 
 })
 
-app.post('/api/users', (req,res) => {
+app.get('/api/users', (req,res) => {
     const user = req.body;
     client.query(`SELECT * FROM userinfo)`, (err, result)=>{
         if(!err){
