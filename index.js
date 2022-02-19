@@ -5,6 +5,22 @@ const bodyParser = require("body-parser");
 const {Client} = require('pg')
 const port = process.env.PORT || 3000;
 var nodemailer = require('nodemailer');
+
+
+const Pool = require("pg").Pool;
+require("dotenv").config();
+const isProduction = process.env.NODE_ENV === "production";
+const connectionString = `postgresql://${process.env.PG_USER}:${process.env.PG_PASSWORD}@${process.env.PG_HOST}:${process.env.PG_PORT}/${process.env.PG_DATABASE}`;
+const pool = new Pool({
+    connectionString: isProduction ? process.env.DATABASE_URL : connectionString,
+    ssl: {
+        rejectUnauthorized: false,
+    },
+});
+
+
+
+
 const client = new Client({
     host: "localhost",
     user: "postgres",
@@ -14,7 +30,7 @@ const client = new Client({
 })
 
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Origin", "https://serverside-project-dev.herokuapp.com/"); // update to match the domain you will make the request from
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
   });
@@ -25,7 +41,7 @@ app.use(function(req, res, next) {
 
 function getdata(email, height, name){
 
-        client.query(`Select avg(height) from userinfo`, (err, result)=>{
+    pool.query(`Select avg(height) from userinfo`, (err, result)=>{
             if(!err){
                 const avg = result.rows[0].avg;
                 var mailOptions = {
@@ -43,7 +59,7 @@ function getdata(email, height, name){
                   });
             }
         });
-        client.end;
+        pool.end;
   
 }
 var transporter = nodemailer.createTransport({
@@ -62,7 +78,7 @@ app.get('/', (req,res) => {
 app.post('/api/insertuser', (req,res) => {
     console.log("running insert");
     const user = req.body;
-    client.query(`INSERT INTO userinfo(name, height, email) VALUES ('${user.name}', ${user.height},'${user.email}')`, (err, result)=>{
+    pool.query(`INSERT INTO userinfo(name, height, email) VALUES ('${user.name}', ${user.height},'${user.email}')`, (err, result)=>{
         if(!err){
             res.send(result.rows);
             getdata(user.email, user.height, user.name);
@@ -73,7 +89,7 @@ app.post('/api/insertuser', (req,res) => {
             console.log(err.body);
         }
     });
-    client.end;
+    pool.end;
 
 })
 app.listen(port, () => console.log(`url-shortener listening on port ${port}!`));
@@ -81,5 +97,5 @@ app.listen(port, () => console.log(`url-shortener listening on port ${port}!`));
 
 
 
-client.connect();
-module.exports = client
+pool.connect();
+module.exports = pool
