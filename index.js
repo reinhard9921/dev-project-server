@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require("body-parser");
 const {Client} = require('pg')
+const port = process.env.PORT || 3000;
 var nodemailer = require('nodemailer');
 const client = new Client({
     host: "localhost",
