@@ -79,7 +79,7 @@ app.get('/api/createTableusers', (req,res) => {
 
 app.get('/api/users', (req,res) => {
     const user = req.body;
-    client.query(`SELECT * FROM userinfo)`, (err, result)=>{
+    client.query(`SELECT * FROM userinfo`, (err, result)=>{
         if(!err){
             res.send(result.rows);
            
