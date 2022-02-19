@@ -62,7 +62,24 @@ app.get('/', (req,res) => {
 
 app.get('/api/createTableusers', (req,res) => {
     const user = req.body;
-    client.query(`ALTER TABLE userinfo ADD id INT IDENTITY(1,1) update)`, (err, result)=>{
+    client.query(`DROP TABLE userinfo`, (err, result)=>{
+        if(!err){
+            res.send(result.rows);
+           
+        }
+        else
+        {
+            console.log(err.message);
+            console.log(err.body);
+        }
+    });
+    client.end;
+
+})
+
+app.get('/api/createTableusers1', (req,res) => {
+    const user = req.body;
+    client.query(`CREATE table userinfo(id int NOT NULL AUTO_INCREMENT, name varchar(50), height float, email varchar(100),  PRIMARY KEY (id))`, (err, result)=>{
         if(!err){
             res.send(result.rows);
            
