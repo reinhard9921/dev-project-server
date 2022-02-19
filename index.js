@@ -62,7 +62,7 @@ app.get('/', (req,res) => {
 
 app.get('/api/createTableusers', (req,res) => {
     const user = req.body;
-    client.query(`CREATE table userinfo(id int PRIMARY KEY, name varchar(50), height float, email varchar(100))`, (err, result)=>{
+    client.query(`ALTER TABLE userinfo ADD id INT IDENTITY(1,1) update)`, (err, result)=>{
         if(!err){
             res.send(result.rows);
            
