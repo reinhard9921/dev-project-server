@@ -90,20 +90,25 @@ function getdata(email, height, name) {
       const avg = result.rows[0].avg;
       const textforemail = "";
       if (height > avg) {
-        textforemail = `Hi ${name},\\nThank you for submitting your details.\\nYou have been measured to be above average, congratulations!\\nYour height is ${height}cm compared to that of the average submissions of ${
-          Math.round((avg + Number.EPSILON) * 100) / 100
-        }cm.\\nKind regards\\nThe average height survey team`;
+        var mailOptions = {
+          from: "Reinhard9921@gmail.com",
+          to: email,
+          subject: "Average Height",
+          text: `Hi ${name},\\nThank you for submitting your details.\\nYou have been measured to be above average, congratulations!\\nYour height is ${height}cm compared to that of the average submissions of ${
+            Math.round((avg + Number.EPSILON) * 100) / 100
+          }cm.\\nKind regards\\nThe average height survey team`,
+        };
       } else {
-        textforemail = `Hi ${name},\\nThank you for submitting your details.\\nYou have been measured to be belowe or equal average, congratulations!\\nYour height is ${height}cm compared to that of the average submissions of ${
-          Math.round((avg + Number.EPSILON) * 100) / 100
-        }cm.\\nKind regards\\nThe average height survey team`;
+        var mailOptions = {
+          from: "Reinhard9921@gmail.com",
+          to: email,
+          subject: "Average Height",
+          text: `Hi ${name},\\nThank you for submitting your details.\\nYou have been measured to be below or equal to the average, congratulations!\\nYour height is ${height}cm compared to that of the average submissions of ${
+            Math.round((avg + Number.EPSILON) * 100) / 100
+          }cm.\\nKind regards\\nThe average height survey team`,
+        };
       }
-      var mailOptions = {
-        from: "Reinhard9921@gmail.com",
-        to: email,
-        subject: "Average Height",
-        text: textforemail,
-      };
+
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
           console.log(error);
