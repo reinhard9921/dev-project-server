@@ -87,6 +87,8 @@ function getdata(email, height, name) {
   client.query(`Select avg(height) from userinfo`, (err, result) => {
     if (!err) {
       const avg = result.rows[0].avg;
+      var p = Math.pow(10, 2);
+      p = Math.round(avg * p) / p;
       var mailOptions = {
         from: "Reinhard9921@gmail.com",
         to: email,
