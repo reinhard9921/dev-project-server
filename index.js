@@ -49,6 +49,7 @@ app.get("/api/users", (req, res) => {
 app.post("/api/insertuser", (req, res) => {
   console.log("running insert");
   const user = req.body;
+
   client.query(
     `INSERT INTO userinfo(name, height, email) VALUES ('${user.name}', ${user.height},'${user.email}')`,
     (err, result) => {
@@ -87,14 +88,37 @@ function getdata(email, height, name) {
   client.query(`Select avg(height) from userinfo`, (err, result) => {
     if (!err) {
       const avg = result.rows[0].avg;
+      const textforemail = "";
+      if (height > avg) {
+        textforemail = `Hi ${name},
 
+        Thank you for submitting your details.
+        
+        You have been measured to be above average, congratulations!
+        Your height is ${height} cm compared to that of the average submissions of ${
+          Math.round((avg + Number.EPSILON) * 100) / 100
+        }cm.
+        
+        Kind regards
+        The average height survey team`;
+      } else {
+        textforemail = `Hi ${name},
+
+        Thank you for submitting your details.
+        
+        You have been measured to be below or equal average, congratulations!
+        Your height is ${height} cm compared to that of the average submissions of ${
+          Math.round((avg + Number.EPSILON) * 100) / 100
+        }cm.
+        
+        Kind regards
+        The average height survey team`;
+      }
       var mailOptions = {
         from: "Reinhard9921@gmail.com",
         to: email,
         subject: "Average Height",
-        text: `Hello ${name}, here you can see your height: ${height}cm compared to the average height of ${
-          Math.round((avg + Number.EPSILON) * 100) / 100
-        }cm`,
+        text: textforemail,
       };
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
