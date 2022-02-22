@@ -94,18 +94,18 @@ function getdata(email, height, name) {
           from: "Reinhard9921@gmail.com",
           to: email,
           subject: "Average Height",
-          text: `Hi ${name},\nThank you for submitting your details.\nYou have been measured to be above average, congratulations!\nYour height is ${height}cm compared to that of the average submissions of ${
+          text: `Hi ${name},\r\nThank you for submitting your details.\r\nYou have been measured to be above average, congratulations!\r\nYour height is ${height}cm compared to that of the average submissions of ${
             Math.round((avg + Number.EPSILON) * 100) / 100
-          }cm.\nKind regards\nThe average height survey team`,
+          }cm.\r\nKind regards\r\nThe average height survey team`,
         };
       } else {
         var mailOptions = {
           from: "Reinhard9921@gmail.com",
           to: email,
           subject: "Average Height",
-          text: `Hi ${name},\nThank you for submitting your details.\nYou have been measured to be below or equal to the average, congratulations!\nYour height is ${height}cm compared to that of the average submissions of ${
+          text: `Hi ${name},\r\nThank you for submitting your details.\r\nYou have been measured to be below or equal to the average, congratulations!\r\nYour height is ${height}cm compared to that of the average submissions of ${
             Math.round((avg + Number.EPSILON) * 100) / 100
-          }cm.\nKind regards\nThe average height survey team`,
+          }cm.\r\nKind regards\r\nThe average height survey team`,
         };
       }
 
